@@ -5,6 +5,7 @@ public class TicTacToe
    private Player player1;
    private Player player2;
    private Player currentPlayer;
+   private Player enemyPlayer;
    private TicTacToeBoard tttBoard;
    private char[][] setup = {{'1','2','3'},
                              {'4','5','6'},
@@ -39,14 +40,21 @@ public class TicTacToe
                   break;
                }
                else if(currentPlayer == player1)
-                       currentPlayer = player2;
-                    else currentPlayer = player1;
+               {
+                  currentPlayer = player2;
+                  enemyPlayer = player1;
+               }
+               else 
+               {
+                  currentPlayer = player1;
+                  enemyPlayer = player2;
+               }
             }
          }
          else
          {
             //Computer turn
-            tttBoard.changeSquare(tttBoard.findBestMove(this.currentPlayer), this.currentPlayer.getPlayerLetter());
+            tttBoard.changeSquare(tttBoard.findBestMove(this.currentPlayer, this.enemyPlayer), this.currentPlayer.getPlayerLetter());
             if (tttBoard.winner(currentPlayer))
                {
                   tttBoard.displayBoard();
@@ -54,8 +62,15 @@ public class TicTacToe
                   break;
                }
                else if(currentPlayer == player1)
-                       currentPlayer = player2;
-                    else currentPlayer = player1;
+               {
+                  currentPlayer = player2;
+                  enemyPlayer = player1;
+               }
+               else 
+               {
+                  currentPlayer = player1;
+                  enemyPlayer = player2;
+               }
          }
             
       }
@@ -79,6 +94,7 @@ public class TicTacToe
          player2 = new Player('O',"Computer", false);
       else player2 = new Player('O',enteredName, true);
       currentPlayer = player1;
+      enemyPlayer = player2;
       tttBoard = new TicTacToeBoard(this.setup);      
    }
 }
