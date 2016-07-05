@@ -154,7 +154,7 @@ public class TicTacToeBoard implements Cloneable
          char move = (char)movenum;
          if(testboards[i] != null)
          {
-            v = testboards[i].maxValue(maximizingPlayer, minimizingPlayer);
+            v = testboards[i].minimax(maximizingPlayer, minimizingPlayer, true);
             
             if(v > bestValue)
             {
@@ -165,48 +165,8 @@ public class TicTacToeBoard implements Cloneable
       }
       return bestMove;
     }
-    
-    public int maxValue(Player maximizingPlayer, Player minimizingPlayer)
-    {
-      
-      if(this.winner(maximizingPlayer))
-         return 1;
-      else if(this.winner(minimizingPlayer))
-         return -1;
-      else if(this.isDraw())
-         return 0;
-      TicTacToeBoard testboard = null;
-      TicTacToeBoard[] testboards = new TicTacToeBoard[10];   
-      int v = -2;
-      for(int i=1; i<=9; i++)
-      {
-         int movenum = i + 48;
-         char move = (char)movenum;
-         if(this.validMove(move))
-         {
-            try
-            {
-               testboard = (TicTacToeBoard) this.clone();
-            }
-            catch(Exception e)
-            {
-               System.out.println("OMG its exception "+e);
-            }
-            testboard.changeSquare(move, minimizingPlayer.getPlayerLetter());
-            testboards[i] = testboard;
-         }
-      }
-      for(int i=1; i <= 9; i++)
-      {
-         if(testboards[i] != null)
-            v = Math.max(testboards[i].minValue(maximizingPlayer, minimizingPlayer), v);
-      }
-      
-      return v;
-   }
-   
-   
-   public int minValue(Player maximizingPlayer, Player minimizingPlayer)
+       
+   public int minimax(Player maximizingPlayer, Player minimizingPlayer, boolean maxTurn)
    {
       if(this.winner(maximizingPlayer))
          return 1;
@@ -214,34 +174,75 @@ public class TicTacToeBoard implements Cloneable
          return -1;
       else if(this.isDraw())
          return 0;
-      TicTacToeBoard testboard = null;
-      TicTacToeBoard[] testboards = new TicTacToeBoard[10];   
-      int v = 2;
-      for(int i=1; i<=9; i++)
-      {
-         int movenum = i + 48;
-         char move = (char)movenum;
-         if(this.validMove(move))
+      if(maxTurn)
+      {   
+         int bestValue = 2, v = 2;
+         TicTacToeBoard testboard = null;
+         TicTacToeBoard[] testboards = new TicTacToeBoard[10];
+         for(int i=1; i<=9; i++)
          {
-            try
+            int movenum = i + 48;
+            char move = (char)movenum;
+            if(this.validMove(move))
             {
-               testboard = (TicTacToeBoard) this.clone();
+               try
+               {
+                  testboard = (TicTacToeBoard) this.clone();
+               }
+               catch(Exception e)
+               {
+                  System.out.println("OMG its exception "+e);
+               }
+               testboard.changeSquare(move, minimizingPlayer.getPlayerLetter());
+               testboards[i] = testboard;
             }
-            catch(Exception e)
-            {
-               System.out.println("OMG its exception "+e);
-            }
-            testboard.changeSquare(move, maximizingPlayer.getPlayerLetter());
-            testboards[i] = testboard;
          }
-      }
-      for(int i=1; i <= 9; i++)
-      {
-         if(testboards[i] != null)
-            v = Math.min(testboards[i].maxValue(maximizingPlayer, minimizingPlayer), v);
-      }
+         for(int i=1; i <= 9; i++)
+         {
+            if(testboards[i] != null)
+            {
+               v = testboards[i].minimax(maximizingPlayer, minimizingPlayer, false);
+               bestValue = Math.min(bestValue, v);
+            }
+         }
       
-      return v; 
+         return bestValue;
+      }
+      else
+      {
+         int bestValue = -2, v = -2;
+         TicTacToeBoard testboard = null;
+         TicTacToeBoard[] testboards = new TicTacToeBoard[10];
+         for(int i=1; i<=9; i++)
+         {
+            int movenum = i + 48;
+            char move = (char)movenum;
+            if(this.validMove(move))
+            {
+               try
+               {
+                  testboard = (TicTacToeBoard) this.clone();
+               }
+               catch(Exception e)
+               {
+                  System.out.println("OMG its exception "+e);
+               }
+               testboard.changeSquare(move, maximizingPlayer.getPlayerLetter());
+               testboards[i] = testboard;
+            }
+         }
+         for(int i=1; i <= 9; i++)
+         {
+            if(testboards[i] != null)
+            {
+               v = testboards[i].minimax(maximizingPlayer, minimizingPlayer, true);
+               bestValue = Math.max(bestValue, v);
+            }
+         }
+      
+         return bestValue;
+
+      }
    }
    
    @Override

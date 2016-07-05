@@ -66,7 +66,7 @@ public class TicTacToe
                   currentPlayer = player2;
                   enemyPlayer = player1;
                }
-               else 
+               else
                {
                   currentPlayer = player1;
                   enemyPlayer = player2;
@@ -74,7 +74,7 @@ public class TicTacToe
          }
             
       }
-      if(tttBoard.isDraw())
+      if(tttBoard.isDraw() && !tttBoard.winner(currentPlayer))
       {
          tttBoard.displayBoard();
          System.out.println("It's a draw.");
